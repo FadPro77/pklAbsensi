@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model absensi {
+  id         Int               @id @default(autoincrement())
+  pegawaiId  Int?
+  tanggal    DateTime          @db.Date
+  jam_masuk  DateTime?         @db.Time(6)
+  jam_keluar DateTime?         @db.Time(6)
+  status     status_kehadiran? @default(hadir)
+  keterangan String?
+  pegawai    pegawai?          @relation(fields: [pegawaiId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "absensi_id_pegawai_fkey")
+
+  @@unique([pegawaiId, tanggal], map: "unique_absensi_per_hari")
+  @@index([pegawaiId, tanggal], map: "idx_absensi_pegawai_tanggal")
+}
+
+model izin_cuti {
+  id               Int               @id @default(autoincrement())
+  pegawaiId        Int?
+  tanggal_mulai    DateTime          @db.Date
+  tanggal_selesai  DateTime          @db.Date
+  jenis            jenis_izin
+  alasan           String?
+  status_pengajuan status_pengajuan? @default(menunggu)
+  pegawai          pegawai?          @relation(fields: [pegawaiId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "izin_cuti_id_pegawai_fkey")
+
+  @@index([pegawaiId], map: "idx_izin_pegawai")
+}
+
+model log_activity {
+  id        Int       @id @default(autoincrement())
+  userId    Int?
+  aktivitas String?   @db.VarChar(255)
+  waktu     DateTime? @default(now()) @db.Timestamp(6)
+  users     users?    @relation(fields: [userId], references: [id], onUpdate: NoAction, map: "log_activity_id_user_fkey")
+
+  @@index([userId], map: "idx_log_user")
+}
+
+model pegawai {
+  id            Int             @id @default(autoincrement())
+  nip           String?         @db.VarChar(20)
+  nama          String          @db.VarChar(100)
+  jabatan       String?         @db.VarChar(100)
+  password      String          @db.VarChar(255)
+  foto          String?         @db.VarChar(255)
+  status        status_pegawai? @default(aktif)
+  tanggal_masuk DateTime?       @db.Date
+  absensi       absensi[]
+  izin_cuti     izin_cuti[]
+}
+
+model users {
+  id           Int            @id @default(autoincrement())
+  username     String         @unique @db.VarChar(50)
+  password     String         @db.VarChar(255)
+  role         Int            @default(2)
+  nama_lengkap String?        @db.VarChar(100)
+  log_activity log_activity[]
+}
+
+enum gender_enum {
+  male
+  female
+}
+
+enum jenis_izin {
+  izin
+  sakit
+  cuti
+}
+
+enum status_kehadiran {
+  hadir
+  izin
+  sakit
+  cuti
+  alpha
+  lembur
+}
+
+enum status_pegawai {
+  aktif
+  nonaktif
+}
+
+enum status_pengajuan {
+  menunggu
+  disetujui
+  ditolak
+}

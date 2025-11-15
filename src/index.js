@@ -1,0 +1,27 @@
+require("dotenv").config();
+const express = require("express");
+const fileUpload = require("express-fileupload");
+const cors = require("cors");
+const router = require("./routes");
+const {
+  notFoundURLHandler,
+  errorHandler,
+} = require("./middlewares/errorHandler");
+
+const app = express();
+const port = process.env.PORT || 4005;
+
+app.use(cors());
+
+app.use(express.json());
+app.use(fileUpload());
+
+app.use("/", router);
+app.use(/.*/, notFoundURLHandler);
+app.use(errorHandler);
+
+app.listen(port, () => {
+  console.log(
+    `express.js app is runnning on port ${port} || http://localhost:${port}`,
+  );
+});
