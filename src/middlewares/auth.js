@@ -58,6 +58,25 @@ exports.validateRegister = (req, res, next) => {
   next();
 };
 
+exports.validateRegisterAdmin = (req, res, next) => {
+  // Validation body schema
+  const validateBody = z.object({
+    password: z.string(),
+    pegawaiId: z.preprocess(
+      (val) => (val === undefined ? undefined : Number(val)),
+      z.number().optional(),
+    ),
+  });
+
+  const result = validateBody.safeParse(req.body);
+  if (!result.success) {
+    throw new BadRequestError(result.error.errors);
+  }
+
+  req.body = result.data; // IMPORTANT: use parsed values
+  next();
+};
+
 exports.validateLogin = (req, res, next) => {
   // Validation body schema
   const validateBody = z.object({

@@ -5,7 +5,7 @@ const { Unauthorized, BadRequestError } = require("../utils/request");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-exports.register = async (data) => {
+exports.register = async (data, file) => {
   if (data.pegawaiId) {
     const pegawai = await prisma.pegawai.findUnique({
       where: { id: data.pegawaiId },
@@ -19,9 +19,19 @@ exports.register = async (data) => {
     data.nama_lengkap = pegawai.nama;
     data.username = pegawai.nip;
   }
+
+  const user = await userRepository.createUser(data);
+  const token = createToken(user);
+
+  delete user.password;
+
+  return {
+    user,
+    token,
+  };
 };
 
-exports.register = async (data, file) => {
+exports.registerAdmin = async (data, file) => {
   const user = await userRepository.createUser(data);
   const token = createToken(user);
   delete user.password;
@@ -61,4 +71,13 @@ const createToken = (user) => {
   });
 
   return token;
+};
+
+exports.getProfile = async (userId) => {
+  return prisma.users.findUnique({
+    where: { id: userId },
+    include: {
+      pegawai: true,
+    },
+  });
 };

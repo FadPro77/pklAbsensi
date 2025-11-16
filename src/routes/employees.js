@@ -2,13 +2,14 @@ const express = require("express");
 const employeesController = require("../controllers/employees");
 const employeesValidation = require("../middlewares/employees");
 const { authorization } = require("../middlewares/auth");
-const { adminRole } = require("../constant/auth");
+const { adminRole, userRole } = require("../constant/auth");
 
 const router = express.Router();
 
 router
   .route("/")
   .get(
+    authorization(adminRole, userRole),
     employeesValidation.validateGetEmployees,
     employeesController.getEmployees,
   )
@@ -21,6 +22,7 @@ router
 router
   .route("/:id")
   .get(
+    authorization(adminRole, userRole),
     employeesValidation.validateGetEmployeesById,
     employeesController.getEmployeesById,
   )
