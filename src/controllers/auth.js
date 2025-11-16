@@ -3,7 +3,7 @@ const { successResponse } = require("../utils/response");
 const userRepository = require("../repositories/users");
 
 exports.register = async (req, res, next) => {
-  const data = await authService.register(req.body, req.files);
+  const data = await authService.register(req.body);
   successResponse(res, data);
 };
 

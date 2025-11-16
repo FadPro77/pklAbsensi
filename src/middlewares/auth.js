@@ -41,20 +41,20 @@ exports.authorization =
   };
 
 exports.validateRegister = (req, res, next) => {
-  // Validation body schema
   const validateBody = z.object({
-    username: z.string(),
-    nama_lengkap: z.string(),
     password: z.string(),
+    pegawaiId: z.preprocess(
+      (val) => (val === undefined ? undefined : Number(val)),
+      z.number().optional(),
+    ),
   });
 
-  // Validate
-  const resultValidateBody = validateBody.safeParse(req.body);
-  if (!resultValidateBody.success) {
-    // If validation fails, return error messages
-    throw new BadRequestError(resultValidateBody.error.errors);
+  const result = validateBody.safeParse(req.body);
+  if (!result.success) {
+    throw new BadRequestError(result.error.errors);
   }
 
+  req.body = result.data; // IMPORTANT: use parsed values
   next();
 };
 
