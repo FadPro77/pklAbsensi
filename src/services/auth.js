@@ -19,7 +19,9 @@ exports.register = async (data) => {
     data.nama_lengkap = pegawai.nama;
     data.username = pegawai.nip;
   }
+};
 
+exports.register = async (data, file) => {
   const user = await userRepository.createUser(data);
   const token = createToken(user);
   delete user.password;
