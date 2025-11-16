@@ -25,27 +25,17 @@ exports.getUserByUsername = async (username) => {
   return JSONBigInt.parse(JSONBigInt.stringify(user));
 };
 
-exports.getUserById = async (id) => {
-  const user = await prisma.users.findFirst({
-    where: {
-      id,
+exports.getUserById = (id) => {
+  return prisma.users.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      username: true,
+      role: true,
+      nama_lengkap: true,
+      pegawaiId: true, // <-- IMPORTANT
     },
   });
-
-  // Convert BigInt fields to string for safe serialization
-  const serializedStudents = JSONBigInt.stringify(user);
-  return JSONBigInt.parse(serializedStudents);
-};
-
-exports.findUserById = async (id) => {
-  const user = await prisma.users.findUnique({
-    where: {
-      id: BigInt(id),
-    },
-  });
-
-  const serializedUser = JSONBigInt.stringify(user);
-  return JSONBigInt.parse(serializedUser);
 };
 
 exports.updateUserRole = async (userId, newRoleId) => {
