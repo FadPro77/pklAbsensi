@@ -1,8 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const JSONBigInt = require("json-bigint");
 const bcrypt = require("bcrypt");
-const axios = require("axios");
-
 const prisma = new PrismaClient();
 
 exports.createUser = async (data) => {
@@ -13,11 +11,10 @@ exports.createUser = async (data) => {
   // create the new user
   const newUser = await prisma.users.create({
     data,
+    include: { pegawai: true },
   });
 
-  // Convert BigInt fields to string for safe serialization
-  const serializedStudents = JSONBigInt.stringify(newUser);
-  return JSONBigInt.parse(serializedStudents);
+  return newUser;
 };
 
 exports.getUserByUsername = async (username) => {
