@@ -54,6 +54,7 @@ model pegawai {
   tanggal_masuk DateTime?       @db.Date
   absensi       absensi[]
   izin_cuti     izin_cuti[]
+  users         users[]
 }
 
 model users {
@@ -62,6 +63,11 @@ model users {
   password     String         @db.VarChar(255)
   role         Int            @default(2)
   nama_lengkap String?        @db.VarChar(100)
+  pegawaiId    Int?
+
+  pegawai      pegawai?       @relation(fields: [pegawaiId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@index([pegawaiId], map: "idx_user_pegawai")
   log_activity log_activity[]
 }
 

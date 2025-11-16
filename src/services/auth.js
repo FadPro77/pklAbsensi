@@ -1,8 +1,25 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const userRepository = require("../repositories/users");
-const { imageUpload } = require("../utils/imageKit");
-const { Unauthorized } = require("../utils/request");
+const { Unauthorized, BadRequestError } = require("../utils/request");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+exports.register = async (data) => {
+  if (data.pegawaiId) {
+    const pegawai = await prisma.pegawai.findUnique({
+      where: { id: data.pegawaiId },
+      select: { nama: true, nip: true },
+    });
+
+    if (!pegawai) {
+      throw new BadRequestError("Pegawai with the provided ID does not exist.");
+    }
+
+    data.nama_lengkap = pegawai.nama;
+    data.username = pegawai.nip;
+  }
+};
 
 exports.register = async (data, file) => {
   const user = await userRepository.createUser(data);
