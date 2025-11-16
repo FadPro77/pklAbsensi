@@ -46,11 +46,10 @@ model log_activity {
 
 model pegawai {
   id            Int             @id @default(autoincrement())
-  nip           String?         @db.VarChar(20)
+  nip           String          @unique @db.VarChar(20)
   nama          String          @db.VarChar(100)
   jabatan       String?         @db.VarChar(100)
-  password      String          @db.VarChar(255)
-  foto          String?         @db.VarChar(255)
+  foto          String?          @default("")
   status        status_pegawai? @default(aktif)
   tanggal_masuk DateTime?       @db.Date
   absensi       absensi[]
