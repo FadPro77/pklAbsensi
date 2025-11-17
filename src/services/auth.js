@@ -67,7 +67,7 @@ const createToken = (user) => {
     user_id: user.id,
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: "72h",
+    expiresIn: "8h",
   });
 
   return token;
