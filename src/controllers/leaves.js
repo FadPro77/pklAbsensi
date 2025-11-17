@@ -17,3 +17,11 @@ exports.getLeavesById = async (req, res, next) => {
   const data = await leavesService.getLeavesById(req.params.id);
   successResponse(res, data);
 };
+
+exports.createLeaves = async (req, res, next) => {
+  const data = await leavesService.createLeaves(req.body, req.user);
+  successResponse(res, {
+    message: "Leaves successfully Added!",
+    data,
+  });
+};

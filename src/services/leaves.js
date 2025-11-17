@@ -1,12 +1,10 @@
 const leavesRepository = require("../repositories/leaves");
-const { imageUpload, imageDelete } = require("../utils/imageKit");
+
 const {
   NotFoundError,
   InternalServerError,
   BadRequestError,
 } = require("../utils/request");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 
 exports.getLeaves = async (
   pegawaiId,
@@ -36,4 +34,14 @@ exports.getLeavesById = async (id) => {
     throw new NotFoundError("Leave not found with the provided ID");
   }
   return data;
+};
+
+exports.createLeaves = async (data, user) => {
+  if (!user || !user.pegawaiId) {
+    throw new BadRequestError("User tidak memiliki pegawaiId!");
+  }
+
+  data.pegawaiId = user.pegawaiId;
+
+  return leavesRepository.createLeaves(data);
 };

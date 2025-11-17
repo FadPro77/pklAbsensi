@@ -62,3 +62,11 @@ exports.getLeavesById = async (id) => {
   });
   return searchedLeavesById;
 };
+
+exports.createLeaves = async (data) => {
+  const newLeaves = await prisma.izin_cuti.create({
+    data,
+  });
+
+  return newLeaves;
+};

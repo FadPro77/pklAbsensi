@@ -1,5 +1,6 @@
 const { z } = require("zod");
 const { BadRequestError } = require("../utils/request");
+const { jenis_izin, status_pengajuan } = require("@prisma/client");
 
 exports.validateGetLeaves = (req, res, next) => {
   const validateQuery = z.object({
@@ -29,3 +30,36 @@ exports.validateGetLeavesById = (req, res, next) => {
   }
   next();
 };
+
+exports.validateCreateLeaves = (req, res, next) => {
+  const validateBody = z.object({
+    jenis: z.enum(["izin", "sakit", "cuti"], {
+      errorMap: () => ({ message: "Izin harus valid" }),
+    }),
+    alasan: z.string(),
+    tanggal_mulai: z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message: "tanggal_mulai harus format YYYY-MM-DD",
+    }),
+    tanggal_selesai: z.string().refine((val) => !isNaN(Date.parse(val)), {
+      message: "tanggal_selesai harus format YYYY-MM-DD",
+    }),
+  });
+
+  const result = validateBody.safeParse(req.body);
+  if (!result.success) {
+    throw new BadRequestError(result.error.errors);
+  }
+
+  // Convert string → Date
+  req.body = {
+    ...result.data,
+    tanggal_mulai: new Date(result.data.tanggal_mulai),
+    tanggal_selesai: new Date(result.data.tanggal_selesai),
+  };
+
+  next();
+};
+
+// status_pengajuan: z.enum(["menunggu", "disetujui", "ditolak"], {
+//   errorMap: () => ({ message: "Status pengajuan harus valid'" }),
+// }),

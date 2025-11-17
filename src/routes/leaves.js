@@ -12,6 +12,11 @@ router
     authorization(adminRole, userRole),
     leavesValidation.validateGetLeaves,
     leavesController.getLeaves,
+  )
+  .post(
+    authorization(adminRole, userRole),
+    leavesValidation.validateCreateLeaves,
+    leavesController.createLeaves,
   );
 
 router

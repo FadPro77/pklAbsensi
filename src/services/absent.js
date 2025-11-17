@@ -4,8 +4,6 @@ const {
   InternalServerError,
   BadRequestError,
 } = require("../utils/request");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 
 exports.getAbsent = async (
   pegawaiId,
@@ -46,19 +44,12 @@ exports.createAbsent = async (data, user) => {
 
   data.pegawaiId = user.pegawaiId;
 
-  // Set tanggal (today)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   data.tanggal = today;
 
-  // Set jam masuk & jam keluar = now
   const now = new Date();
   data.jam_masuk = now;
-  // data.jam_keluar = now;
-
-  // Remove this because it breaks:
-  // if (existing) throw ...
-  // You don't need this in Absent
 
   return absentRepository.createAbsent(data);
 };
