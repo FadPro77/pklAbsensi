@@ -25,6 +25,11 @@ router
     authorization(adminRole, userRole),
     leavesValidation.validateGetLeavesById,
     leavesController.getLeavesById,
+  )
+  .put(
+    authorization(adminRole),
+    leavesValidation.validateUpdateLeaves,
+    leavesController.updateLeaves,
   );
 
 module.exports = router;

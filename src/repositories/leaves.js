@@ -70,3 +70,16 @@ exports.createLeaves = async (data) => {
 
   return newLeaves;
 };
+
+exports.updateLeaves = async (id, data) => {
+  const updatedLeaves = await prisma.izin_cuti.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      status_pengajuan: data.status_pengajuan,
+    },
+  });
+
+  return updatedLeaves;
+};

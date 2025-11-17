@@ -25,3 +25,12 @@ exports.createLeaves = async (req, res, next) => {
     data,
   });
 };
+
+exports.updateLeaves = async (req, res, next) => {
+  const { id } = req.params;
+  const data = await leavesService.updateLeaves(id, req.body);
+  successResponse(res, {
+    message: "Leaves successfully Updated!",
+    data,
+  });
+};

@@ -1,3 +1,4 @@
+const { status_pengajuan } = require("@prisma/client");
 const leavesRepository = require("../repositories/leaves");
 
 const {
@@ -44,4 +45,23 @@ exports.createLeaves = async (data, user) => {
   data.pegawaiId = user.pegawaiId;
 
   return leavesRepository.createLeaves(data);
+};
+
+exports.updateLeaves = async (id, data) => {
+  const existingLeaves = await leavesRepository.getLeavesById(id);
+  if (!existingLeaves) {
+    throw new NotFoundError("Leaves is Not Found!");
+  }
+
+  data = {
+    ...existingLeaves,
+    ...data,
+  };
+
+  const updatedLeaves = await leavesRepository.updateLeaves(id, data);
+  if (!updatedLeaves) {
+    throw new InternalServerError(["Failed to update leaves!"]);
+  }
+
+  return updatedLeaves;
 };

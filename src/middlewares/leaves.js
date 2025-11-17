@@ -50,7 +50,6 @@ exports.validateCreateLeaves = (req, res, next) => {
     throw new BadRequestError(result.error.errors);
   }
 
-  // Convert string → Date
   req.body = {
     ...result.data,
     tanggal_mulai: new Date(result.data.tanggal_mulai),
@@ -60,6 +59,26 @@ exports.validateCreateLeaves = (req, res, next) => {
   next();
 };
 
-// status_pengajuan: z.enum(["menunggu", "disetujui", "ditolak"], {
-//   errorMap: () => ({ message: "Status pengajuan harus valid'" }),
-// }),
+exports.validateUpdateLeaves = (req, res, next) => {
+  const validateParams = z.object({
+    id: z.coerce.number(),
+  });
+
+  const resultValidateParams = validateParams.safeParse(req.params);
+  if (!resultValidateParams.success) {
+    throw new BadRequestError(resultValidateParams.error.errors);
+  }
+
+  const validateBody = z.object({
+    status_pengajuan: z.enum(["menunggu", "disetujui", "ditolak"], {
+      errorMap: () => ({ message: "Status pengajuan harus valid'" }),
+    }),
+  });
+
+  const resultValidateBody = validateBody.safeParse(req.body);
+  if (!resultValidateBody.success) {
+    throw new BadRequestError(resultValidateBody.error.errors);
+  }
+
+  next();
+};
