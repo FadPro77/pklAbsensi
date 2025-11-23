@@ -62,10 +62,8 @@ exports.validateRegisterAdmin = (req, res, next) => {
   // Validation body schema
   const validateBody = z.object({
     password: z.string(),
-    pegawaiId: z.preprocess(
-      (val) => (val === undefined ? undefined : Number(val)),
-      z.number().optional(),
-    ),
+    username: z.string(),
+    nama_lengkap: z.string(),
   });
 
   const result = validateBody.safeParse(req.body);
