@@ -33,7 +33,7 @@ exports.validateGetAbsentById = (req, res, next) => {
 
 exports.validateCreateAbsent = (req, res, next) => {
   const validateBody = z.object({
-    status: z.enum(["hadir", "izin", "sakit", "cuti", "alpha", "lembur"], {
+    status: z.enum(["hadir", "izin", "sakit", "cuti", "alpha", "telat"], {
       errorMap: () => ({ message: "Status harus valid'" }),
     }),
     keterangan: z.string(),
@@ -50,7 +50,7 @@ exports.validateCreateAbsent = (req, res, next) => {
 
 exports.validateUpdateAbsent = (req, res, next) => {
   const validateBody = z.object({
-    status: z.enum(["hadir", "izin", "sakit", "cuti", "alpha", "lembur"], {
+    status: z.enum(["hadir", "izin", "sakit", "cuti", "alpha", "telat"], {
       errorMap: () => ({ message: "Status harus valid" }),
     }),
     keterangan: z.string().optional(),
