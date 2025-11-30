@@ -11,7 +11,7 @@ exports.getLeaves = async (
   status_pengajuan,
 ) => {
   let query = {};
-
+  let where = {};
   let andQuery = [];
 
   if (pegawaiId) {
@@ -52,7 +52,12 @@ exports.getLeaves = async (
     };
   }
 
-  const searchedLeaves = await prisma.izin_cuti.findMany(query);
+  const searchedLeaves = await prisma.izin_cuti.findMany({
+    where,
+    include: {
+      pegawai: true,
+    },
+  });
   return searchedLeaves;
 };
 
