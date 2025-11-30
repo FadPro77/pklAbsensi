@@ -53,9 +53,12 @@ exports.getAbsent = async (
   }
 
   const searchedAbsent = await prisma.absensi.findMany({
-    where,
+    where: andQuery.length ? { AND: andQuery } : undefined,
     include: {
       pegawai: true,
+    },
+    orderBy: {
+      id: "desc",
     },
   });
   return searchedAbsent;

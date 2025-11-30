@@ -49,6 +49,12 @@ exports.createAbsent = async (data, user) => {
   data.tanggal = today;
 
   const now = new Date();
+
+  const localToday = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  localToday.setHours(0, 0, 0, 0);
+
+  data.tanggal = localToday;
+
   data.jam_masuk = now;
 
   return absentRepository.createAbsent(data);
