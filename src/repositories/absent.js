@@ -11,7 +11,7 @@ exports.getAbsent = async (
   keterangan,
 ) => {
   let query = {};
-
+  let where = {};
   let andQuery = [];
 
   if (pegawaiId) {
@@ -52,7 +52,12 @@ exports.getAbsent = async (
     };
   }
 
-  const searchedAbsent = await prisma.absensi.findMany(query);
+  const searchedAbsent = await prisma.absensi.findMany({
+    where,
+    include: {
+      pegawai: true,
+    },
+  });
   return searchedAbsent;
 };
 
