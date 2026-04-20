@@ -51,3 +51,20 @@ exports.updateUserRole = async (userId, newRoleId) => {
   const serializedUser = JSONBigInt.stringify(updatedUser);
   return JSONBigInt.parse(serializedUser);
 };
+
+exports.updatePassword = async (userId, newPassword) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+  const updatedUser = await prisma.users.update({
+    where: {
+      id: Number(userId),
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  const serializedUser = JSONBigInt.stringify(updatedUser);
+  return JSONBigInt.parse(serializedUser);
+};
