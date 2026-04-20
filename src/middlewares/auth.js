@@ -54,7 +54,7 @@ exports.validateRegister = (req, res, next) => {
     throw new BadRequestError(result.error.errors);
   }
 
-  req.body = result.data; // IMPORTANT: use parsed values
+  req.body = result.data;
   next();
 };
 
