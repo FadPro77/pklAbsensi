@@ -9,7 +9,7 @@ const router = express.Router();
 router
   .route("/")
   .get(
-    authorization(adminRole, userRole),
+    authorization(adminRole),
     employeesValidation.validateGetEmployees,
     employeesController.getEmployees,
   )
