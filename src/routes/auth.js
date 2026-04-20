@@ -5,6 +5,7 @@ const {
   authorization,
   validateAdmin,
   validateRegisterAdmin,
+  validateChangePassword,
 } = require("../middlewares/auth");
 const {
   register,
@@ -12,6 +13,7 @@ const {
   getProfile,
   changeUserRole,
   registerAdmin,
+  changePassword,
 } = require("../controllers/auth");
 const { adminRole, userRole } = require("../constant/auth");
 
@@ -26,6 +28,12 @@ router.put(
   authorization(adminRole),
   validateAdmin,
   changeUserRole,
+);
+router.put(
+  "/change-password",
+  authorization(adminRole, userRole),
+  validateChangePassword,
+  changePassword,
 );
 
 module.exports = router;

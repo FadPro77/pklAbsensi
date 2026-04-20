@@ -21,13 +21,11 @@ exports.register = async (data, file) => {
   }
 
   const user = await userRepository.createUser(data);
-  const token = createToken(user);
 
   delete user.password;
 
   return {
     user,
-    token,
   };
 };
 
@@ -80,4 +78,8 @@ exports.getProfile = async (userId) => {
       pegawai: true,
     },
   });
+};
+
+exports.changePassword = async (userId, newPassword) => {
+  return userRepository.updatePassword(userId, newPassword);
 };
