@@ -88,7 +88,7 @@ enum status_kehadiran {
   sakit
   cuti
   alpha
-  lembur
+  telat
 }
 
 enum status_pegawai {
