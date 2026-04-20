@@ -54,12 +54,11 @@ exports.validateRegister = (req, res, next) => {
     throw new BadRequestError(result.error.errors);
   }
 
-  req.body = result.data; // IMPORTANT: use parsed values
+  req.body = result.data;
   next();
 };
 
 exports.validateRegisterAdmin = (req, res, next) => {
-  // Validation body schema
   const validateBody = z.object({
     password: z.string(),
     username: z.string(),
@@ -71,21 +70,18 @@ exports.validateRegisterAdmin = (req, res, next) => {
     throw new BadRequestError(result.error.errors);
   }
 
-  req.body = result.data; // IMPORTANT: use parsed values
+  req.body = result.data;
   next();
 };
 
 exports.validateLogin = (req, res, next) => {
-  // Validation body schema
   const validateBody = z.object({
     username: z.string(),
     password: z.string(),
   });
 
-  // Validate
   const resultValidateBody = validateBody.safeParse(req.body);
   if (!resultValidateBody.success) {
-    // If validation fails, return error messages
     throw new BadRequestError(resultValidateBody.error.errors);
   }
 
@@ -98,5 +94,26 @@ exports.validateAdmin = (req, res, next) => {
     // adminRole = 1
     throw new Forbidden("You do not have permission to perform this action!");
   }
+  next();
+};
+
+exports.validateChangePassword = (req, res, next) => {
+  const validateBody = z
+    .object({
+      newPassword: z.string().min(6),
+      confirmPassword: z.string().min(6),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: "New password and confirm password do not match!",
+      path: ["confirmPassword"],
+    });
+
+  const result = validateBody.safeParse(req.body);
+
+  if (!result.success) {
+    throw new BadRequestError(result.error.errors);
+  }
+
+  req.body = result.data;
   next();
 };

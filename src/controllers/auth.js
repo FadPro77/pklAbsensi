@@ -50,3 +50,15 @@ exports.changeUserRole = async (req, res) => {
     message: "User role updated successfully!",
   });
 };
+
+exports.changePassword = async (req, res) => {
+  const userId = req.user.id;
+  const { newPassword } = req.body;
+
+  const updatedPassword = await authService.changePassword(userId, newPassword);
+
+  res.status(200).json({
+    success: true,
+    message: "Password updated successfully!",
+  });
+};
