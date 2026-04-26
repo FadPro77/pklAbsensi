@@ -89,7 +89,7 @@ exports.validateLogin = (req, res, next) => {
 };
 
 exports.validateAdmin = (req, res, next) => {
-  const userRole = req.user.role; // Pastikan role_id sudah di-set pada req.user setelah proses otentikasi
+  const userRole = req.user.role;
   if (userRole !== 1) {
     // adminRole = 1
     throw new Forbidden("You do not have permission to perform this action!");
