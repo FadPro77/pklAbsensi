@@ -63,7 +63,7 @@ exports.validateUpdateAbsent = (req, res, next) => {
   } catch (error) {
     return res.status(400).json({
       message: "Invalid data",
-      errors: error.errors ?? error.message, // FIXED
+      errors: error.errors ?? error.message,
     });
   }
 };

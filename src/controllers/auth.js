@@ -21,7 +21,6 @@ exports.getProfile = async (req, res, next) => {
   try {
     const userId = req.user.id;
 
-    // Ambil user dari database dengan relasi location
     const user = await authService.getProfile(userId);
 
     if (!user) {
@@ -30,7 +29,6 @@ exports.getProfile = async (req, res, next) => {
         .json({ success: false, message: "User not found" });
     }
 
-    // Hilangkan password sebelum dikirim ke client
     const { password, ...safeUser } = user;
 
     successResponse(res, safeUser);

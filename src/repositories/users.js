@@ -4,11 +4,9 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 
 exports.createUser = async (data) => {
-  // encrypt password
   const saltRounds = 10;
   data.password = await bcrypt.hash(data.password, saltRounds);
 
-  // create the new user
   const newUser = await prisma.users.create({
     data,
     include: { pegawai: true },
@@ -33,7 +31,7 @@ exports.getUserById = (id) => {
       username: true,
       role: true,
       nama_lengkap: true,
-      pegawaiId: true, // <-- IMPORTANT
+      pegawaiId: true,
     },
   });
 };
